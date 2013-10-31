@@ -90,22 +90,23 @@ static const char * const HPDF_INHERITABLE_ENTRIES[5] = {
 /*----- HPDF_Pages -----------------------------------------------------------*/
 
 HPDF_Pages
-HPDF_Pages_New  (HPDF_MMgr   mmgr,
-                 HPDF_Pages  parent,
-                 HPDF_Xref   xref)
+HPDF_Pages_New  (HPDF_MMgr   mmgr, 	/* revocke memory group management */
+                 HPDF_Pages  parent, /* this pagetree obj's parent */
+                 HPDF_Xref   xref) 	 /*this obj will insert into which xref  */
 {
     HPDF_STATUS ret = HPDF_OK;
+
+		/*----[ allocate mm space ]---------------------------*/
     HPDF_Pages pages;
-
-
     HPDF_PTRACE((" HPDF_Pages_New\n"));
 
-    pages = HPDF_Dict_New (mmgr);
+    pages = HPDF_Dict_New (mmgr); /* pages is a kind of HPDF_Dict type */
     if (!pages)
         return NULL;
 
-    pages->header.obj_class |= HPDF_OSUBCLASS_PAGES;
-    pages->before_write_fn = Pages_BeforeWrite;
+		/*----[ set values ]----------------------------------*/
+    pages->header.obj_class |= HPDF_OSUBCLASS_PAGES; /* what exactly */
+    pages->before_write_fn = Pages_BeforeWrite; /* what? */
 
     if (HPDF_Xref_Add (xref, pages) != HPDF_OK)
         return NULL;

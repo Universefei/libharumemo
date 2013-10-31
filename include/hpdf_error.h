@@ -154,8 +154,10 @@ extern "C" {
 typedef struct  _HPDF_Error_Rec  *HPDF_Error;
 
 typedef struct  _HPDF_Error_Rec {
+		/* a function pointer and its 3 params */
     HPDF_STATUS             error_no;
     HPDF_STATUS             detail_no;
+		/* a callback */
     HPDF_Error_Handler      error_fn;
     void                    *user_data;
 } HPDF_Error_Rec;

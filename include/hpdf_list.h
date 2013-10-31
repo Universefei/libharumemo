@@ -25,14 +25,28 @@
 extern "C" {
 #endif
 
+
+/******************************************************************************
+ *                                                                            *
+ *  There are 3 container obj types, array/dictionary/stream, that can contain*
+ *  some objectsl                                                             *
+ *                                                                            *
+ *  How to inform a container obj contain other objs?                         *
+ *  ANSWER: the HPDF_List in container obj construct                          *
+ *                                                                            *
+ *****************************************************************************/
+
 typedef struct _HPDF_List_Rec  *HPDF_List;
 
 typedef struct _HPDF_List_Rec {
-      HPDF_MMgr       mmgr;
-      HPDF_Error      error;
+      HPDF_MMgr       mmgr; /* memory group management */
+      HPDF_Error      error; /* error handle mechenism */
+
+			/* what? */
       HPDF_UINT       block_siz;
       HPDF_UINT       items_per_block;
-      HPDF_UINT       count;
+
+      HPDF_UINT       count; /* how many obj does this container obj contain */
       void            **obj;
 } HPDF_List_Rec;
 

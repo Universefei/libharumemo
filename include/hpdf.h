@@ -53,6 +53,7 @@
 #include "hpdf_consts.h"
 #include "hpdf_types.h"
 
+/* 什么是句柄 */
 typedef void         *HPDF_HANDLE;
 typedef HPDF_HANDLE   HPDF_Doc;
 typedef HPDF_HANDLE   HPDF_Page;
@@ -72,7 +73,7 @@ typedef HPDF_HANDLE   HPDF_FontDef;
 typedef HPDF_HANDLE   HPDF_U3D;
 typedef HPDF_HANDLE   HPDF_JavaScript;
 typedef HPDF_HANDLE   HPDF_Error;
-typedef HPDF_HANDLE   HPDF_MMgr;
+typedef HPDF_HANDLE   HPDF_MMgr; /* Memory Group */
 typedef HPDF_HANDLE   HPDF_Dict;
 typedef HPDF_HANDLE   HPDF_EmbeddedFile;
 typedef HPDF_HANDLE   HPDF_OutputIntent;
@@ -120,8 +121,7 @@ HPDF_EXPORT(void)
 HPDF_Free  (HPDF_Doc  pdf);
 
 
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_NewDoc  (HPDF_Doc  pdf);
+HPDF_EXPORT(HPDF_STATUS) HPDF_NewDoc  (HPDF_Doc  pdf);
 
 
 HPDF_EXPORT(void)

@@ -84,10 +84,14 @@ extern "C" {
  *  the real Object-ID is described "obj_id & 0x00FFFFFF"
  */
 
+/**
+ *  ¿¿¿¿¿¿¿¿¿(¿¿¿¿¿direct obj / indirect ob  
+ */
+
 typedef struct _HPDF_Obj_Header {
     HPDF_UINT32  obj_id;
     HPDF_UINT16  gen_no;
-    HPDF_UINT16  obj_class;
+    HPDF_UINT16  obj_class;/* ¿¿¿¿¿ */
 } HPDF_Obj_Header;
 
 
@@ -418,11 +422,14 @@ typedef struct _HPDF_Dict_Rec {
     HPDF_Obj_Header            header;
     HPDF_MMgr                  mmgr;
     HPDF_Error                 error;
+		/* store elements in a dict? */
     HPDF_List                  list;
+		/* what? */
     HPDF_Dict_BeforeWriteFunc  before_write_fn;
     HPDF_Dict_OnWriteFunc      write_fn;
     HPDF_Dict_AfterWriteFunc   after_write_fn;
     HPDF_Dict_FreeFunc         free_fn;
+
     HPDF_Stream                stream;
     HPDF_UINT                  filter;
     HPDF_Dict                  filterParams;
@@ -432,9 +439,10 @@ typedef struct _HPDF_Dict_Rec {
 
 typedef struct _HPDF_DictElement_Rec *HPDF_DictElement;
 
+/* what's in a dict */
 typedef struct _HPDF_DictElement_Rec {
-    char   key[HPDF_LIMIT_MAX_NAME_LEN + 1];
-    void        *value;
+    char   key[HPDF_LIMIT_MAX_NAME_LEN + 1]; /* key */
+    void        *value; /* value */
 } HPDF_DictElement_Rec;
 
 
@@ -576,7 +584,9 @@ HPDF_Xref_GetEntryByObjectId  (HPDF_Xref  xref,
                                HPDF_UINT  obj_id);
 
 
-
+/**
+ * every pdf element correspongding object types
+ */
 typedef HPDF_Dict  HPDF_EmbeddedFile;
 typedef HPDF_Dict  HPDF_NameDict;
 typedef HPDF_Dict  HPDF_NameTree;

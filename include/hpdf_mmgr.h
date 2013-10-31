@@ -38,14 +38,20 @@ typedef struct  _HPDF_MPool_Node_Rec {
 typedef struct  _HPDF_MMgr_Rec  *HPDF_MMgr;
 
 typedef struct  _HPDF_MMgr_Rec {
+		/* error handling */
     HPDF_Error        error;
+		/* allocation function pointer */
     HPDF_Alloc_Func   alloc_fn;
+		/* memory recycle function pointer */
     HPDF_Free_Func    free_fn;
+		/* memory pool */
     HPDF_MPool_Node   mpool;
     HPDF_UINT         buf_size;
 
 #ifdef HPDF_MEM_DEBUG
+		/* allocate function's param? */
     HPDF_UINT         alloc_cnt;
+		/* recycle function's param? */
     HPDF_UINT         free_cnt;
 #endif
 } HPDF_MMgr_Rec;

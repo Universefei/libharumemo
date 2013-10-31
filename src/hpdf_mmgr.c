@@ -32,6 +32,12 @@
 #endif
 #endif
 
+/******************************************************************************
+ *                                                                            *
+ *                         function declaration                               *
+ *                                                                            *
+ *****************************************************************************/
+
 static void * HPDF_STDCALL
 InternalGetMem  (HPDF_UINT  size);
 
@@ -39,6 +45,15 @@ static void HPDF_STDCALL
 InternalFreeMem  (void*  aptr);
 
 
+/******************************************************************************
+ *                                                                            *
+ *                          function definition                               *
+ *                                                                            *
+ *****************************************************************************/
+
+/*---------------------------------------------------------------------------*/
+/*                           HPDF_MMgr_New()                                 */
+/*---------------------------------------------------------------------------*/
 HPDF_MMgr
 HPDF_MMgr_New  (HPDF_Error       error,
                 HPDF_UINT        buf_size,
@@ -96,7 +111,7 @@ HPDF_MMgr_New  (HPDF_Error       error,
             if (node == NULL) {
                 HPDF_SetError (error, HPDF_FAILD_TO_ALLOC_MEM, HPDF_NOERROR);
 
-                mmgr->free_fn(mmgr);
+                mmgr->free_fn(mmgr);/* roll back */
                 mmgr = NULL;
             } else {
                 mmgr->mpool = node;
@@ -122,6 +137,9 @@ HPDF_MMgr_New  (HPDF_Error       error,
     return mmgr;
 }
 
+/*---------------------------------------------------------------------------*/
+/*                           HPDF_MMgr_Free()                                */
+/*---------------------------------------------------------------------------*/
 void
 HPDF_MMgr_Free  (HPDF_MMgr  mmgr)
 {
@@ -160,6 +178,9 @@ HPDF_MMgr_Free  (HPDF_MMgr  mmgr)
     mmgr->free_fn (mmgr);
 }
 
+/*---------------------------------------------------------------------------*/
+/*                           HPDF_GetMem()                                   */
+/*---------------------------------------------------------------------------*/
 void*
 HPDF_GetMem  (HPDF_MMgr  mmgr,
               HPDF_UINT  size)
@@ -216,6 +237,9 @@ HPDF_GetMem  (HPDF_MMgr  mmgr,
     return ptr;
 }
 
+/*---------------------------------------------------------------------------*/
+/*                            HPDF_FreeMem()                                 */
+/*---------------------------------------------------------------------------*/
 void
 HPDF_FreeMem  (HPDF_MMgr  mmgr,
                void       *aptr)
@@ -235,12 +259,18 @@ HPDF_FreeMem  (HPDF_MMgr  mmgr,
     return;
 }
 
+/*---------------------------------------------------------------------------*/
+/*                             InternalGetMem()                              */
+/*---------------------------------------------------------------------------*/
 static void * HPDF_STDCALL
 InternalGetMem  (HPDF_UINT  size)
 {
     return HPDF_MALLOC (size);
 }
 
+/*---------------------------------------------------------------------------*/
+/*                              InternalFreeMem()                            */
+/*---------------------------------------------------------------------------*/
 static void HPDF_STDCALL
 InternalFreeMem  (void*  aptr)
 {
