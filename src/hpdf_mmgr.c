@@ -33,9 +33,7 @@
 #endif
 
 /******************************************************************************
- *                                                                            *
  *                         function declaration                               *
- *                                                                            *
  *****************************************************************************/
 
 static void * HPDF_STDCALL
@@ -46,9 +44,7 @@ InternalFreeMem  (void*  aptr);
 
 
 /******************************************************************************
- *                                                                            *
  *                          function definition                               *
- *                                                                            *
  *****************************************************************************/
 
 /*---------------------------------------------------------------------------*/
@@ -64,9 +60,11 @@ HPDF_MMgr_New  (HPDF_Error       error,
 
     HPDF_PTRACE((" HPDF_MMgr_New\n"));
 
+		/* param aloc_fn specify how to new(allocate mem) this datastructure */
     if (alloc_fn)
         mmgr = (HPDF_MMgr)alloc_fn (sizeof(HPDF_MMgr_Rec));
     else
+				/* InternalGetMem is default mem-allocate function */
         mmgr = (HPDF_MMgr)InternalGetMem (sizeof(HPDF_MMgr_Rec));
 
     HPDF_PTRACE(("+%p mmgr-new\n", mmgr));
@@ -94,9 +92,8 @@ HPDF_MMgr_New  (HPDF_Error       error,
         }
 
         /*
-         *  if buf_size parameter is specified, this object is configured
-         *  to be using memory-pool.
-         *
+         *  if buf_size parameter is specified, allocate buf_size bulked mem
+				 *  as first node in Mpool,and Mpool is a single-linked list 
          */
         if (!buf_size)
             mmgr->mpool = NULL;
@@ -128,10 +125,11 @@ HPDF_MMgr_New  (HPDF_Error       error,
 #endif
         }
 
+				/* if mmgr allocated successfully */
         if (mmgr) {
             mmgr->buf_size = buf_size;
         }
-    } else
+    } else /* mmgr generation failed */
         HPDF_SetError(error, HPDF_FAILD_TO_ALLOC_MEM, HPDF_NOERROR);
 
     return mmgr;
@@ -158,6 +156,10 @@ HPDF_MMgr_Free  (HPDF_MMgr  mmgr)
         node = tmp->next_node;
 
         HPDF_PTRACE(("-%p mmgr-node-free\n", tmp));
+				/* free_fn should free not only HPDF_MPool_Node tmp point to, 
+				 * but also mem space tmp->buf points to ?
+				 * this shoud be implemented in function free_fn point to!
+				 */
         mmgr->free_fn (tmp);
 
 #ifdef HPDF_MEM_DEBUG
@@ -176,6 +178,8 @@ HPDF_MMgr_Free  (HPDF_MMgr  mmgr)
 
     HPDF_PTRACE(("-%p mmgr-free\n", mmgr));
     mmgr->free_fn (mmgr);
+
+		/* free mem principle: inside out!!! / bottom up */
 }
 
 /*---------------------------------------------------------------------------*/
@@ -195,11 +199,15 @@ HPDF_GetMem  (HPDF_MMgr  mmgr,
         size *= HPDF_ALINMENT_SIZ;
 #endif
 
+				/* if MPool in mmgr have enough mem space needed */
         if (node->size - node->used_size >= size) {
             ptr = (HPDF_BYTE*)node->buf + node->used_size;
             node->used_size += size;
             return ptr;
         } else {
+						/* if MPool can not satisfy requirement */
+						
+						/* allocate new node, add it to mmgr's mpool single link list */
             HPDF_UINT tmp_buf_siz = (mmgr->buf_size < size) ?  size :
                 mmgr->buf_size;
 
@@ -216,12 +224,20 @@ HPDF_GetMem  (HPDF_MMgr  mmgr,
             node->size = tmp_buf_siz;
         }
 
+				/* pre-inserted single-linked list */
         node->next_node = mmgr->mpool;
         mmgr->mpool = node;
         node->used_size = size;
+				/* once allocated node->buf do not change ever, 
+				 * just modify node->used_size to indicate where is start of not used
+				 */
         node->buf = (HPDF_BYTE*)node + sizeof(HPDF_MPool_Node_Rec);
+
         ptr = node->buf;
     } else {
+				/* if mmgr has no mpool, allocate not-mmgr-managed memory */
+				
+				/* if mmgr->mpool == NULL means mmgr do not use memory pool mechanism!! */
         ptr = mmgr->alloc_fn (size);
         HPDF_PTRACE(("+%p mmgr-alloc_fn size=%u\n", ptr, size));
 

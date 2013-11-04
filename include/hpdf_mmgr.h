@@ -25,16 +25,23 @@
 extern "C" {
 #endif
 
+/*----- HPDF_MPool_Node -----------------------------------------------------*/
 typedef struct  _HPDF_MPool_Node_Rec  *HPDF_MPool_Node;
 
 typedef struct  _HPDF_MPool_Node_Rec {
+		/* real mem space */
     HPDF_BYTE*       buf;
+		/* metadata: specify the mpool size */
     HPDF_UINT        size;
+
+		/* single link list  */
     HPDF_UINT        used_size;
-    HPDF_MPool_Node  next_node;
+    HPDF_MPool_Node  next_node; /* next mpool node */
+
 } HPDF_MPool_Node_Rec;
 
 
+/*----- HPDF_MMgr -----------------------------------------------------------*/
 typedef struct  _HPDF_MMgr_Rec  *HPDF_MMgr;
 
 typedef struct  _HPDF_MMgr_Rec {
@@ -44,7 +51,9 @@ typedef struct  _HPDF_MMgr_Rec {
     HPDF_Alloc_Func   alloc_fn;
 		/* memory recycle function pointer */
     HPDF_Free_Func    free_fn;
-		/* memory pool */
+
+		/* memory pool link list */
+		/* if mpool == NULL means this mmgr do not use memory pool mechanism! */
     HPDF_MPool_Node   mpool;
     HPDF_UINT         buf_size;
 
