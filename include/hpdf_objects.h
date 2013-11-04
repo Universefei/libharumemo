@@ -84,14 +84,11 @@ extern "C" {
  *  the real Object-ID is described "obj_id & 0x00FFFFFF"
  */
 
-/**
- *  ¿¿¿¿¿¿¿¿¿(¿¿¿¿¿direct obj / indirect ob  
- */
 
 typedef struct _HPDF_Obj_Header {
     HPDF_UINT32  obj_id;
     HPDF_UINT16  gen_no;
-    HPDF_UINT16  obj_class;/* ¿¿¿¿¿ */
+    HPDF_UINT16  obj_class;
 } HPDF_Obj_Header;
 
 
@@ -116,6 +113,23 @@ HPDF_Obj_Free  (HPDF_MMgr    mmgr,
 void
 HPDF_Obj_ForceFree  (HPDF_MMgr    mmgr,
                      void         *obj);
+
+/******************************************************************************
+ *     PDF Obj types:                                                         *
+ *                                                                            *
+ *     1) Null                                                                *
+ *     2) Boolean                                                             *
+ *     3) Number                                                              *
+ *     4) Real                                                                *
+ *     5) Name                                                                *
+ *     6) String                                                              *
+ *     7) Binary                                                              *
+ *     8) Array                                                               *
+ *     9) Dict                                                                *
+ *     10) ProxyObject                                                        *
+ *     11) Xref                                                               *
+ *                                                                            *
+ *****************************************************************************/
 
 
 /*---------------------------------------------------------------------------*/
@@ -158,6 +172,8 @@ HPDF_Boolean_Write  (HPDF_Boolean  obj,
 /*---------------------------------------------------------------------------*/
 /*----- HPDF_Number ---------------------------------------------------------*/
 
+/* what's difference between HPDF_Number and HPDF_Obj_Header.Obj_num? */
+/* This number is a kind of obj type, have nothing to do with obj header! */
 typedef struct _HPDF_Number_Rec  *HPDF_Number;
 
 typedef struct _HPDF_Number_Rec {
@@ -419,27 +435,37 @@ typedef HPDF_STATUS
                            HPDF_Stream  stream);
 
 typedef struct _HPDF_Dict_Rec {
+		/* obj numbers; direct/indirect object */
     HPDF_Obj_Header            header;
+
+		/* mem group and error management */
     HPDF_MMgr                  mmgr;
     HPDF_Error                 error;
+
 		/* store elements in a dict? */
     HPDF_List                  list;
-		/* what? */
+
+		/* what are those function pointers for? */
     HPDF_Dict_BeforeWriteFunc  before_write_fn;
     HPDF_Dict_OnWriteFunc      write_fn;
     HPDF_Dict_AfterWriteFunc   after_write_fn;
     HPDF_Dict_FreeFunc         free_fn;
 
+		/* ??? */
     HPDF_Stream                stream;
     HPDF_UINT                  filter;
     HPDF_Dict                  filterParams;
+
+		/* attributions(like page have page_attr) */
     void                       *attr;
+
 } HPDF_Dict_Rec;
 
 
 typedef struct _HPDF_DictElement_Rec *HPDF_DictElement;
 
 /* what's in a dict */
+/* Dict store pairs (key-value pairs)*/
 typedef struct _HPDF_DictElement_Rec {
     char   key[HPDF_LIMIT_MAX_NAME_LEN + 1]; /* key */
     void        *value; /* value */
@@ -535,6 +561,8 @@ HPDF_Proxy_New  (HPDF_MMgr  mmgr,
 
 typedef struct _HPDF_XrefEntry_Rec  *HPDF_XrefEntry;
 
+/* No obj_Header as member */
+/* each implies to every line in Xref section of a PDF file */
 typedef struct _HPDF_XrefEntry_Rec {
       char    entry_typ;
       HPDF_UINT    byte_offset;
@@ -544,13 +572,19 @@ typedef struct _HPDF_XrefEntry_Rec {
 
 
 typedef struct _HPDF_Xref_Rec {
+
       HPDF_MMgr    mmgr;
       HPDF_Error   error;
+
       HPDF_UINT32  start_offset;
       HPDF_List    entries;
       HPDF_UINT    addr;
+
+			/* some times a pdf have multiple Xrefes */
       HPDF_Xref    prev;
+
       HPDF_Dict    trailer;
+
 } HPDF_Xref_Rec;
 
 

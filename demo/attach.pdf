@@ -49,13 +49,14 @@ stream
 BT
 /F1 20 Tf
 70.33 386 Td
-(This PDF should have an attachment named attach.c) Tj
+(HHHello Fei Lunzhou! This PDF should have an attachment named attach.c) Tj
 ET
 
 endstream
 endobj
+% include white-space characters,like space enter etc.--------------------------------
 7 0 obj
-84
+105
 endobj
 8 0 obj
 <<

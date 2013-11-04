@@ -37,17 +37,17 @@ typedef struct _HPDF_Doc_Rec {
     HPDF_UINT32     sig_bytes;
     HPDF_PDFVer     pdf_version;
 
-    HPDF_MMgr         mmgr;
-    HPDF_Catalog      catalog;
+    HPDF_MMgr         mmgr; /* provide a mechanism */
+    HPDF_Catalog      catalog; /* catalog object (often number 1 obj) */
     HPDF_Outline      outlines;
-    HPDF_Xref         xref;
-    HPDF_Pages        root_pages;
-    HPDF_Pages        cur_pages;
-    HPDF_Page         cur_page;
+    HPDF_Xref         xref; /* the Xref part of a doc(3rd part) */
+    HPDF_Pages        root_pages; /* root page tree obj */
+    HPDF_Pages        cur_pages; /* child page tree obj */
+    HPDF_Page         cur_page; /* page obj */
     HPDF_List         page_list;
-    HPDF_Error_Rec    error;
+    HPDF_Error_Rec    error; /* provide a mechanism */
     HPDF_Dict         info;
-    HPDF_Dict         trailer;
+    HPDF_Dict         trailer; /* the 4th part of a doc */
 
     HPDF_List         font_mgr;
     HPDF_BYTE         ttfont_tag[6];

@@ -97,17 +97,27 @@ typedef struct _HPDF_MemStreamAttr_Rec {
 
 
 typedef struct _HPDF_Stream_Rec {
+		/* ? */
     HPDF_UINT32               sig_bytes;
+
+		/* emun type of 4 */
     HPDF_StreamType           type;
+
+		/* memgroup management and error handling */
     HPDF_MMgr                 mmgr;
     HPDF_Error                error;
+
     HPDF_UINT                 size;
+
+		/* function pointers */
     HPDF_Stream_Write_Func    write_fn;
     HPDF_Stream_Read_Func     read_fn;
     HPDF_Stream_Seek_Func     seek_fn;
     HPDF_Stream_Free_Func     free_fn;
     HPDF_Stream_Tell_Func     tell_fn;
     HPDF_Stream_Size_Func     size_fn;
+
+		/* attributions */
     void*                     attr;
 } HPDF_Stream_Rec;
 
