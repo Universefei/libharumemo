@@ -38,27 +38,37 @@ HPDF_CopyError  (HPDF_Error  dst,
                  HPDF_Error  src);
 
 
+/*---------------------------------------------------------------------------*/
+/*----- HPDF_Error_Init -----------------------------------------------------*/
 void
 HPDF_Error_Init  (HPDF_Error    error,
                   void         *user_data)
 {
+		/* all set to ZERO */
     HPDF_MemSet(error, 0, sizeof(HPDF_Error_Rec));
 
+		/* pointto user_data */
     error->user_data = user_data;
 }
 
+/*---------------------------------------------------------------------------*/
+/*----- HPDF_Error_GetCode --------------------------------------------------*/
 HPDF_STATUS
 HPDF_Error_GetCode  (HPDF_Error  error)
 {
     return error->error_no;
 }
 
+/*---------------------------------------------------------------------------*/
+/*----- HPDF_Error_GetDetailCode --------------------------------------------*/
 HPDF_STATUS
 HPDF_Error_GetDetailCode  (HPDF_Error  error)
 {
     return error->detail_no;
 }
 
+/*---------------------------------------------------------------------------*/
+/*----- HPDF_CopyError ------------------------------------------------------*/
 void
 HPDF_CopyError  (HPDF_Error  dst,
                  HPDF_Error  src)
@@ -69,6 +79,8 @@ HPDF_CopyError  (HPDF_Error  dst,
     dst->user_data = src->user_data;
 }
 
+/*---------------------------------------------------------------------------*/
+/*----- HPDF_SetError -------------------------------------------------------*/
 HPDF_STATUS
 HPDF_SetError  (HPDF_Error   error,
                 HPDF_STATUS  error_no,
@@ -84,6 +96,8 @@ HPDF_SetError  (HPDF_Error   error,
 }
 
 
+/*---------------------------------------------------------------------------*/
+/*----- HPDF_CheckError -----------------------------------------------------*/
 HPDF_EXPORT(HPDF_STATUS)
 HPDF_CheckError  (HPDF_Error   error)
 {
@@ -97,6 +111,8 @@ HPDF_CheckError  (HPDF_Error   error)
 }
 
 
+/*---------------------------------------------------------------------------*/
+/*----- HPDF_RaiseError -----------------------------------------------------*/
 HPDF_STATUS
 HPDF_RaiseError  (HPDF_Error   error,
                   HPDF_STATUS  error_no,
@@ -107,6 +123,9 @@ HPDF_RaiseError  (HPDF_Error   error,
     return HPDF_CheckError (error);
 }
 
+
+/*---------------------------------------------------------------------------*/
+/*----- HPDF_Error_Reset ----------------------------------------------------*/
 
 void
 HPDF_Error_Reset (HPDF_Error error)
